@@ -10,19 +10,18 @@ const server = net.createServer((socket) => {
         socket.end("HTTP/1.1 200 OK\r\n\r\n");
         });
 
-    socket.on("data", (data) => {
-        const requestData = data.toString().split("\r\n");
-        const requestPath = requestData[0].split(" ");
-        if (requestPath[1] === "/") {
-            socket.write("HTTP/1.1 200 OK\r\n\r\n");
-        } else {
-            socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
-        }
-
-        1;
-        
-        socket.end();
-    })
+        socket.on("data", (data) => {
+            const requestData = data.toString().split("\r\n");
+            const requestPath = requestData[0].split(" ");
+            if (requestPath[1] === "/") {
+              socket.write("HTTP/1.1 200 OK\r\n\r\n");
+            } else {
+              socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+            }
+            1;
+        1
+            socket.end();
+          });
 
     socket.on("close", () => {
         socket.end();
