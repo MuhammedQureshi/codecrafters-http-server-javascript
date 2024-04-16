@@ -12,12 +12,6 @@ const server = net.createServer((socket) => {
 
         if (path === "/") {
             socket.write("HTTP/1.1 200 OK\r\n\r\n");
-        } else if(path.startsWith("/echo/")) {
-            handleEchoRequest(path, socket);
-        } else if(path === "/user-agent") {
-            handleUserAgentRequest(headers, socket);
-        } else if(path.startsWith("/files/")) {
-            handleFileRequest(method, path, headers, socket);
         } else {
             socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
         }
