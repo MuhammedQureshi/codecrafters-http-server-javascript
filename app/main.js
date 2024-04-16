@@ -1,38 +1,31 @@
 const net = require("net");
+const fs = require("fs");
+const paths = require('path');
 
-// You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
+const args = process.argv.slice(2);
 
-// Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
+    socket.on("data", (data) => {
+        const [requestLine, ...headers] = data.toString().split("\r\n");
+        const [method, path] = requestLine.split(" ");
 
-  socket.write('HTTP/1.1 200 OK\r\n\r\n')
-  socket.on('data', (data) => {
-    const request = data.toString().split('\r\n')
-    const startLine = request[0].split(' ')
-    const method = startLine[0]
-    const url = startLine[1]
-    const headers = request.slice(
-      1,
-      request.findIndex((line) => line === '')
-    )
-    console.log('Method:', method)
-    console.log('URL:', url)
-    console.log('Headers:', headers)
-    if (url === '/') {
-      socket.write('HTTP/1.1 200 OK\r\n\r\n')
-      console.log('200')
-    } else {
-      socket.write('HTTP/1.1 404 Not Found\r\n\r\n')
-      console.log('404')
-    }
-1
-  })
-
+        if (path === "/") {
+            socket.write("HTTP/1.1 200 OK\r\n\r\n");
+        } else if(path.startsWith("/echo/")) {
+            handleEchoRequest(path, socket);
+        } else if(path === "/user-agent") {
+            handleUserAgentRequest(headers, socket);
+        } else if(path.startsWith("/files/")) {
+            handleFileRequest(method, path, headers, socket);
+        } else {
+            socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+        }
+        socket.end();
+    });
 
     socket.on("close", () => {
-        socket.end();
-        server.close();
+      socket.end();
     });
 });
 
