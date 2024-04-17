@@ -35,7 +35,7 @@ function handleEchoRequest(path, socket) {
         "Content-Type: text/plain",
         `Content-Length: ${contentLength}`,
         "",
-        responseBody
+
     ];
 
     socket.write(responseHeaders.join("\r\n"));
