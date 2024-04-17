@@ -28,10 +28,12 @@ function handleEchoRequest(path, socket) {
     const randomString = path.substring("/echo/".length);
     const responseBody = randomString + "\r\n";
 
+    const contentLength = Buffer.byteLength(responseBody, 'utf8');
+
     const responseHeaders = [
         "HTTP/1.1 200 OK",
         "Content-Type: text/plain",
-        `Content-Length: ${responseBody.length}`,
+        `Content-Length: ${contentLength}`,
         "",
         responseBody
     ];
