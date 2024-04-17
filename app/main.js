@@ -34,11 +34,7 @@ function handleEchoRequest(path, socket) {
     const contentLength = randomString.length;
 
     // Construct the response headers and body
-    const response =
-    `HTTP/1.1 200 OK\r\n
-    Content-Type: text/plain\r\n
-    Content-Length: ${contentLength}\r\n\r\n
-    ${randomString}\r\n`;
+    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${randomString}\r\n`;
 
     // Send the response
     socket.write(response);
@@ -57,8 +53,7 @@ function handleAgentRequest(headers, socket) {
 
     const contentLength = userAgent.length;
 
-        // Construct the response headers and body
-        const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`;
+    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`
 
 
     // Send the response
