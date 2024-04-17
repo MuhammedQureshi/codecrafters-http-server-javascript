@@ -46,7 +46,7 @@ function handleAgentRequest(headers, socket) {
 
     for (const header of headers) {
         if (header.startsWith("User-Agent:")) {
-            userAgent = headers.substring("User-Agent".length).trim();
+            userAgent = header.substring("User-Agent".length).trim();
             break;
         }
     }
