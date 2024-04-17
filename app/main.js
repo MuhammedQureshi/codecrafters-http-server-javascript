@@ -40,4 +40,3 @@ function handleEchoRequest(path, socket) {
 
     socket.write(responseHeaders.join("\r\n"));
 }
-
