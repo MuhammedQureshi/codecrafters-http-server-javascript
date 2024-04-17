@@ -51,7 +51,7 @@ function handleAgentRequest(headers, socket) {
         }
     }
 
-    const contentLength = Buffer.byteLength(userAgent, 'utf-8');
+    const contentLength = userAgent -2;
 
     const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`
 
