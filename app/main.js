@@ -51,12 +51,13 @@ function handleAgentRequest(headers, socket) {
         }
     }
 
-    userAgent = userAgent.trim();
 
-    const contentLength = Buffer.byteLength(userAgent, 'utf-8');
-    
-    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`;
-    
+    const contentLength = userAgent.length;
+
+    console.log(contentLength);
+
+    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`
+
 
     // Send the response
     socket.write(response);
