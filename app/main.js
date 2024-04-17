@@ -1,9 +1,6 @@
 const net = require("net");
-const fs = require("fs");
-const paths = require('path');
 
 console.log("Logs from your program will appear here!");
-const args = process.argv.slice(2);
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
@@ -12,20 +9,33 @@ const server = net.createServer((socket) => {
 
         if (path === "/") {
             socket.write("HTTP/1.1 200 OK\r\n\r\n");
-        } else if(path.startsWith("/echo/")) {
+        } else if (path.startsWith("/echo/")) {
             handleEchoRequest(path, socket);
-        } else if(path === "/user-agent") {
-            handleUserAgentRequest(headers, socket);
-        } else if(path.startsWith("/files/")) {
-            handleFileRequest(method, path, headers, socket);
         } else {
             socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
         }
+        socket.end();
     });
 
     socket.on("close", () => {
-      socket.end();
+        socket.end();
     });
 });
 
 server.listen(4221, "localhost");
+
+function handleEchoRequest(path, socket) {
+    const randomString = path.substring("/echo/".length);
+    const responseBody = randomString + "\r\n";
+
+    const responseHeaders = [
+        "HTTP/1.1 200 OK",
+        "Content-Type: text/plain",
+        `Content-Length: ${responseBody.length}`,
+        "",
+        responseBody
+    ];
+
+    socket.write(responseHeaders.join("\r\n"));
+}
+
