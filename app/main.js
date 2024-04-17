@@ -45,37 +45,22 @@ function handleEchoRequest(path, socket) {
 }
 
 function handleAgentRequest(headers, socket) {
-    let userAgent = "Unknown";
+
+    let userAgent 
+
     for (const header of headers) {
         if (header.startsWith("User-Agent:")) {
-            userAgent = header.substring("User-Agent:".length).trim();
+            userAgent = headers.substring("User-Agent".length).trim();
             break;
         }
     }
 
-    // Check if User-Agent header was found
-    if (userAgent !== "Unknown") {
-        // Calculate the length of the response body
-        const contentLength = userAgent.length;
+    const contentLength = userAgent.length;
 
         // Construct the response headers and body
-        const response =
-        `HTTP/1.1 200 OK\r\n
-        Content-Type: text/plain\r\n
-        Content-Length: ${contentLength}\r\n\r\n
-        ${userAgent}\r\n`;
+        const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${userAgent}\r\n`;
 
-        // Send the response
-        socket.write(response);
-    } else {
-        // If User-Agent header not found, respond with an error
-        const errorResponse =
-        `HTTP/1.1 400 Bad Request\r\n
-        Content-Type: text/plain\r\n
-        Content-Length: 15\r\n\r\n
-        Content-Type missing\r\n`;
 
-        // Send the error response
-        socket.write(errorResponse);
-    }
+    // Send the response
+    socket.write(response);
 }
