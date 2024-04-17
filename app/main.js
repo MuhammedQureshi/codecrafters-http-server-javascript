@@ -11,7 +11,10 @@ const server = net.createServer((socket) => {
             socket.write("HTTP/1.1 200 OK\r\n\r\n");
         } else if (path.startsWith("/echo/")) {
             handleEchoRequest(path, socket);
-        } else {
+        } else if (path.startsWith('/user-agent')) {
+            handleAgentRequest(headers, socket)
+        }
+         else {
             socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
         }
         socket.end();
@@ -28,7 +31,7 @@ function handleEchoRequest(path, socket) {
     const randomString = path.substring("/echo/".length);
 
     // Calculate the length of the response body
-    const contentLength = randomString.length + 2; // 2 is for '\r\n'
+    const contentLength = randomString.length;
 
     // Construct the response headers and body
     const response =
@@ -36,6 +39,31 @@ function handleEchoRequest(path, socket) {
     Content-Type: text/plain\r\n
     Content-Length: ${contentLength}\r\n\r\n
     ${randomString}\r\n`;
+
+    // Send the response
+    socket.write(response);
+}
+
+function handleAgentRequest(headers, socket) {
+
+    let userAgent 
+
+    for (const header of headers) {
+        if (header.startsWith("User-Agent:")) {
+            userAgent = headers.substring("User-Agent".length).trim();
+            break;
+        }
+    }
+
+    const contentLength = userAgent.length;
+
+        // Construct the response headers and body
+        const response =
+        `HTTP/1.1 200 OK\r\n
+        Content-Type: text/plain\r\n
+        Content-Length: ${contentLength}\r\n\r\n
+        ${userAgent}\r\n`;
+
 
     // Send the response
     socket.write(response);
