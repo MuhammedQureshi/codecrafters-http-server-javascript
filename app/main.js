@@ -28,10 +28,14 @@ function handleEchoRequest(path, socket) {
     const randomString = path.substring("/echo/".length);
 
     // Calculate the length of the response body
-    const contentLength = randomString.length; // 2 is for '\r\n'
+    const contentLength = randomString.length + 2; // 2 is for '\r\n'
 
     // Construct the response headers and body
-    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${randomString}\r\n`;
+    const response =
+    `HTTP/1.1 200 OK\r\n
+    Content-Type: text/plain\r\n
+    Content-Length: ${contentLength}\r\n\r\n
+    ${randomString}\r\n`;
 
     // Send the response
     socket.write(response);
