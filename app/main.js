@@ -26,17 +26,13 @@ server.listen(4221, "localhost");
 
 function handleEchoRequest(path, socket) {
     const randomString = path.substring("/echo/".length);
-    const responseBody = randomString + "\r\n";
 
-    const contentLength = Buffer.byteLength(responseBody, 'utf8');
+    // Calculate the length of the response body
+    const contentLength = randomString.length + 2; // 2 is for '\r\n'
 
-    const responseHeaders = [
-        "HTTP/1.1 200 OK",
-        "Content-Type: text/plain",
-        `Content-Length: ${contentLength}`,
-        "",
+    // Construct the response headers and body
+    const response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${contentLength}\r\n\r\n${randomString}\r\n`;
 
-    ];
-
-    socket.write(responseHeaders.join("\r\n"));
+    // Send the response
+    socket.write(response);
 }
