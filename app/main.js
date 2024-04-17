@@ -42,7 +42,7 @@ function handleEchoRequest(path, socket) {
 
 function handleAgentRequest(headers, socket) {
 
-    let userAgent 
+    let userAgent = "Unknown"
 
     for (const header of headers) {
         if (header.startsWith("User-Agent:")) {
