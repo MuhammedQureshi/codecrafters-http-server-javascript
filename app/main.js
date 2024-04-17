@@ -51,7 +51,6 @@ function handleAgentRequest(headers, socket) {
         }
     }
 
-
     const contentLength = userAgent.length;
 
     console.log(userAgent);
