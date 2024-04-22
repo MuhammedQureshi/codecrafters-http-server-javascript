@@ -1,4 +1,5 @@
 const net = require("net");
+const fs = require("fs");
 
 console.log("Logs from your program will appear here!");
 
@@ -12,7 +13,9 @@ const server = net.createServer((socket) => {
         } else if (path.startsWith("/echo/")) {
             handleEchoRequest(path, socket);
         } else if (path.startsWith('/user-agent')) {
-            handleAgentRequest(headers, socket)
+            handleAgentRequest(headers, socket);
+        } else if (path.startsWith('/files/')) {
+            handleFileRequest(path, socket);
         }
          else {
             socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
@@ -60,4 +63,35 @@ function handleAgentRequest(headers, socket) {
 
     // Send the response
     socket.write(response);
+}
+
+
+function handleFileRequest(path, socket) {
+    // Extract the filename from the path
+    const filename = path.substring("/files/".length);
+    
+    // Construct the full path to the file based on the directory provided
+    const directory = process.argv[process.argv.indexOf("--directory") + 1];
+    const filePath = `${directory}/${filename}`;
+
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        // Read the file contents
+        const fileContents = fs.readFileSync(filePath);
+
+        // Calculate the content length based on the file size
+        const contentLength = fileContents.length;
+
+        // Construct the response with application/octet-stream content type
+        const response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${contentLength}\r\n\r\n`;
+        
+        // Send the response headers
+        socket.write(response);
+
+        // Send the file contents as the response body
+        socket.write(fileContents);
+    } else {
+        // If the file doesn't exist, respond with 404
+        socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+    }
 }
